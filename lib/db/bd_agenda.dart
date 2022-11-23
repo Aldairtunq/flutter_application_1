@@ -10,7 +10,7 @@ class DBAdmin {
   static final DBAdmin db = DBAdmin._();
   DBAdmin._();
 
-  Future<Database?> chekDatabase()  async{
+  Future<Database?> chekDatabase() async {
     if (myDatabase != null) {
       return myDatabase;
     }
@@ -31,5 +31,50 @@ class DBAdmin {
             "CREATE TABLE task(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, description TEXT, status TEXT)");
       },
     );
+  }
+
+  insertTask() async {
+    Database? db = await chekDatabase();
+    int res = await db!.rawInsert(
+        "INSERT INTO TASK (title, description, status) VALUES {'ir de compras','tenemos que ir ttotus','false'} ");
+    print(res);
+  }
+
+  getTask() async {
+    Database? db = await chekDatabase();
+    List tasks = await db!.rawQuery("SEELCT * FROM  task ");
+    print(tasks);
+  }
+
+  updateRawTask() async {
+    Database? db = await chekDatabase();
+    int res = await db!.rawUpdate(
+        "UPDATE TASK SET title =  ' ir de comrpa',description= 'comprar ' status='true' WHERE id=1");
+    print(res);
+  }
+
+  updateTask() async {
+    Database? db = await chekDatabase();
+    int res = await db!.update(
+      "TASK",
+      {
+        "title": " ir al cine",
+        "description": " es el viernes en la tatrea",
+        "title": "false",
+      },
+      where: "id =2",
+    );
+  }
+
+  deleteRawTask() async {
+    Database? db = await chekDatabase();
+    int res = await db!.rawDelete("DELETE FROM TASK WHERE id=1");
+    print(res);
+  }
+
+  deleteTask() async {
+    Database? db = await chekDatabase();
+    int res = await db!.delete("TASK", where: "id=3");
+    print(res);
   }
 }
