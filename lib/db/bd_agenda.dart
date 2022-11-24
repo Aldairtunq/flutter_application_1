@@ -1,5 +1,7 @@
+import 'dart:ffi';
 import 'dart:io';
 
+import 'package:flutter_application_1/models/task_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -9,6 +11,8 @@ class DBAdmin {
 
   static final DBAdmin db = DBAdmin._();
   DBAdmin._();
+
+  Future<List<TaskModel>>? get tasksModelList => null;
 
   Future<Database?> chekDatabase() async {
     if (myDatabase != null) {
@@ -48,11 +52,18 @@ class DBAdmin {
 
 //devolver la lista demapas
 
-  Future<List<Map<String, dynamic>>> getTasks() async {
-    Database? db = await chekDatabase();
+  Future<Future<List<TaskModel>>?> getTasks() async {
+    Database? db = await checkDatabase();
     List<Map<String, dynamic>> tasks = await db!.query("Tasks ");
-    print("www $tasks ");
-    return tasks;
+    List<TaskModel>? taskModelList =
+        tasks.map((e) => TaskModel.deMapAModel(e)).toList();
+
+    // tasks.forEach((element) {
+    //  TaskModel Task = TaskModel.deMapAMode(element);
+    //  tasksModelList.add(tasks);
+    //  });
+
+    return tasksModelList;
   }
 
   updateRawTask() async {
@@ -86,4 +97,6 @@ class DBAdmin {
     int res = await db!.delete("TASK", where: "id=3");
     print(res);
   }
+
+  checkDatabase() {}
 }
