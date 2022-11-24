@@ -40,10 +40,19 @@ class DBAdmin {
     print(res);
   }
 
-  getTask() async {
+  getRawTasks() async {
     Database? db = await chekDatabase();
     List tasks = await db!.rawQuery("SEELCT * FROM  task ");
-    print(tasks);
+    print(tasks[0]);
+  }
+
+//devolver la lista demapas
+
+  Future<List<Map<String, dynamic>>> getTasks() async {
+    Database? db = await chekDatabase();
+    List<Map<String, dynamic>> tasks = await db!.query("Tasks ");
+    print("www $tasks ");
+    return tasks;
   }
 
   updateRawTask() async {

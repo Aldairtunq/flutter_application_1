@@ -3,46 +3,37 @@ import 'package:flutter/material.dart';
 import '../db/bd_agenda.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  get myTasks => null;
+
+  Future<String> getFullNase() async {
+    return "Aldair tunquipa";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                DBAdmin.db.initDatabase();
-              },
-              child: Text("Mostrar data"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                DBAdmin.db.insertTask();
-              },
-              child: Text("Insertar Tarea"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                //DBAdmin.db.updateRawTask();
-                DBAdmin.db.updateTask();
-              },
-              child: Text("Actualizar tarea Tarea"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                DBAdmin.db.deleteRawTask();
-                //DBAdmin.db.deleteTask();
-              },
-              child: Text("Elimnar Tarea"),
-            ),
-          ],
+        appBar: AppBar(
+          title: const Text('Home Page'),
         ),
-      ),
-    );
+        body: FutureBuilder(
+            future: DBAdmin.db.getTasks(),
+            builder: (BuildContext context, AsyncSnapshot snap) {
+              if (snap.hasData) {
+                List<Map<String, dynamic>> myTastks = snap.data;
+                return ListView.builder(
+                  itemCount: myTastks.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text(myTasks[index]["title"]),
+                      subtitle: Text(myTasks[index]["descripcion"]),
+                    );
+                  },
+                );
+              }
+
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }));
   }
 }
