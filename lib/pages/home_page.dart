@@ -1,5 +1,8 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/task_model.dart';
+import 'package:path/path.dart';
 
 import '../db/bd_agenda.dart';
 
@@ -10,6 +13,31 @@ class HomePage extends StatelessWidget {
     return "Aldair tunquipa";
   }
 
+  showDialogForm() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("AGREGAR  TAREA"),
+              SizedBox(
+                height: 6.8,
+              ),
+              TextField(
+                decoration: InputDecoration(hintText: "titulo"),
+              ),
+              TextField(
+                decoration: InputDecoration(hintText: "Description"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     DBAdmin.db.getTasks();
@@ -17,6 +45,10 @@ class HomePage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Home Page'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icon.add),
         ),
         body: FutureBuilder(
             future: DBAdmin.db.getTasks(),
